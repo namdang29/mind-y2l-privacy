@@ -28,8 +28,13 @@
   const q = new URLSearchParams(location.search);
   const msg = document.getElementById("msg"), out = document.getElementById("out"), copy = document.getElementById("copy");
   if (q.get("code")) {
-    msg.textContent = "Signed in. Copy this full URL and paste it into the terminal where tiktok_upload.py is waiting:";
-    out.textContent = location.href; out.hidden = false; copy.hidden = false;
+    msg.textContent = "Signed in. Sending the result to Mind Y2L on this computer…";
+    fetch("http://127.0.0.1:8766/cb" + location.search, { mode: "no-cors", targetAddressSpace: "local" })
+      .then(() => { msg.textContent = "Signed in. You can close this tab and go back to the terminal."; })
+      .catch(() => {
+        msg.textContent = "Signed in. Copy this full URL and paste it into the terminal where tiktok_upload.py is waiting:";
+        out.textContent = location.href; out.hidden = false; copy.hidden = false;
+      });
     copy.onclick = () => navigator.clipboard.writeText(location.href).then(() => copy.textContent = "Copied");
   } else if (q.get("error")) {
     msg.textContent = "TikTok returned an error: " + q.get("error") + (q.get("error_description") ? " – " + q.get("error_description") : "");
