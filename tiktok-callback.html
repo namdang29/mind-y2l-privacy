@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mind Y2L – TikTok sign-in</title>
+<style>
+  :root { --bg: #fff; --fg: #1d1d1f; --muted: #6e6e73; --line: #e5e5ea; --box: #f2f2f7; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f2; --muted: #a1a1a6; --line: #2c2c2e; --box: #1c1c1e; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 40px 16px; }
+  code { display: block; background: var(--box); border: 1px solid var(--line); border-radius: 8px; padding: 12px; word-break: break-all; font-size: 14px; }
+  .muted { color: var(--muted); }
+  button { margin-top: 12px; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--box); color: var(--fg); font: inherit; cursor: pointer; }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+<h1>Mind Y2L – TikTok sign-in</h1>
+<p id="msg" class="muted">Reading the response from TikTok…</p>
+<code id="out" hidden></code>
+<button id="copy" hidden>Copy</button>
+<p class="muted">This page only shows the value TikTok returned so the owner can paste it into the Mind Y2L tool on their own computer. Nothing is sent or stored. <a href="./">Privacy Policy</a> · <a href="terms.html">Terms of Service</a></p>
+</main>
+<script>
+  const q = new URLSearchParams(location.search);
+  const msg = document.getElementById("msg"), out = document.getElementById("out"), copy = document.getElementById("copy");
+  if (q.get("code")) {
+    msg.textContent = "Signed in. Copy this full URL and paste it into the terminal where tiktok_upload.py is waiting:";
+    out.textContent = location.href; out.hidden = false; copy.hidden = false;
+    copy.onclick = () => navigator.clipboard.writeText(location.href).then(() => copy.textContent = "Copied");
+  } else if (q.get("error")) {
+    msg.textContent = "TikTok returned an error: " + q.get("error") + (q.get("error_description") ? " – " + q.get("error_description") : "");
+  } else {
+    msg.textContent = "No response from TikTok on this page.";
+  }
+</script>
+</body>
+</html>
